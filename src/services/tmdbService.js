@@ -32,9 +32,10 @@ const safeAxiosGet = async (url, params, retries = 10) => {
         throw error;
     }
 };
+
 const toDataUrl = async (url) => {
     try {
-        const res = await axios.get(url, { responseType: 'arraybuffer', timeout: 8000 });
+        const res = await axios.get(url, { responseType: 'arraybuffer', timeout: 10000 });
         const base64 = Buffer.from(res.data).toString('base64');
         return `data:image/jpeg;base64,${base64}`;
     } catch (err) {
@@ -42,6 +43,8 @@ const toDataUrl = async (url) => {
     }
 };
 
+// NOTE: Maine is function ko call karna band kar diya hai main logic mein
+// taaki purana data delete na ho jaye.
 const cleanCloudinaryAccount = async () => {
     try {
         console.log('🔥 Wiping Cloudinary account resources...');
@@ -57,16 +60,19 @@ const processImage = async (tmdbPath, folderName, fileId) => {
     const fullUrl = `${TMDB_IMAGE_BASE}${tmdbPath}`;
     
     try {
+        // overwrite: false = Agar image hai to dobara upload mat karo
         const upload = await cloudinary.uploader.upload(fullUrl, {
             folder: folderName,
             public_id: fileId,
             resource_type: 'image',
+            overwrite: false, 
             timeout: 60000 
         });
 
+        // Tiny Placeholder Generate Karo
         const tinyUrl = cloudinary.url(upload.public_id, {
             secure: true,
-            transformation: [{ width: 20, crop: "scale" }, { quality: "auto" }, { format: "jpg" }]
+            transformation: [{ width: 20, crop: "scale" }, { quality: 60 }, { format: "jpg" }]
         });
 
         const dataUrl = await toDataUrl(tinyUrl);
@@ -78,7 +84,8 @@ const processImage = async (tmdbPath, folderName, fileId) => {
 
 const ensureActorExists = async (tmdbActor, apiKey) => {
     try {
-        let actor = await Actor.findOne({ tmdbId: tmdbActor.id });
+        // Fast Check: .lean() use kiya taaki query fast ho
+        let actor = await Actor.findOne({ tmdbId: tmdbActor.id }).lean();
         if (actor) return actor;
 
         let details = {};
@@ -91,6 +98,7 @@ const ensureActorExists = async (tmdbActor, apiKey) => {
 
         const imageData = await processImage(tmdbActor.profile_path, 'movies/actors', `actor_${tmdbActor.id}`);
 
+        // New Actor Create Karo
         actor = await Actor.findOneAndUpdate(
             { tmdbId: tmdbActor.id },
             {
@@ -117,12 +125,14 @@ exports.seedDatabase = async () => {
     const apiKey = process.env.TMDB_API_KEY;
     if (!apiKey) throw new Error('TMDB_API_KEY is missing');
 
-    await cleanCloudinaryAccount();
+    // WARNING: Cloudinary Wipe ko comment kar diya hai. 
+    // Agar sab delete karna ho tabhi uncomment karein.
+    // await cleanCloudinaryAccount();
 
-    console.log('--- Starting Seed (Upsert Mode) ---');
+    console.log('--- Starting Smart Seed (Target: 50 Pages / 1000 Movies) ---');
 
     let currentPage = 1;
-    let totalPages = 5; 
+    let totalPages = 50; // TARGET 1000 MOVIES
     let totalMoviesSeeded = 0;
 
     while (currentPage <= totalPages) {
@@ -133,6 +143,16 @@ exports.seedDatabase = async () => {
             const movies = response.data.results;
 
             for (const movieData of movies) {
+                
+                // === SMART SYNC CHECK START ===
+                const existingMovie = await Movie.findOne({ tmdbId: movieData.id }).lean();
+                if (existingMovie) {
+                    // Agar movie hai, to skip karo aur next iteration pe jao
+                    console.log(`⏭️  Skipping: ${movieData.title.substring(0, 15)} (Exists)`);
+                    continue; 
+                }
+                // === SMART SYNC CHECK END ===
+
                 process.stdout.write(`Processing: ${movieData.title.substring(0, 15)}... `);
 
                 try {
@@ -164,29 +184,26 @@ exports.seedDatabase = async () => {
                     const posterData = await processImage(movieData.poster_path, 'movies/posters', `poster_${movieData.id}`);
                     const backdropData = await processImage(movieData.backdrop_path, 'movies/backdrops', `backdrop_${movieData.id}`);
 
-                    await Movie.findOneAndUpdate(
-                        { tmdbId: movieData.id },
-                        {
-                            tmdbId: movieData.id,
-                            title: movieData.title,
-                            overview: movieData.overview,
-                            releaseDate: movieData.release_date,
-                            voteAverage: movieData.vote_average,
-                            voteCount: movieData.vote_count,
-                            director: director,
-                            cast: processedCast,
-                            posterImageUrl: posterData.url,
-                            posterDataUrl: posterData.dataUrl,
-                            backdropImageUrl: backdropData.url,
-                            backdropDataUrl: backdropData.dataUrl
-                        },
-                        { upsert: true, returnDocument: 'after', setDefaultsOnInsert: true }
-                    );
+                    await Movie.create({ // create use kar rahe hain kyunki smart sync ne duplicate check kar liya hai
+                        tmdbId: movieData.id,
+                        title: movieData.title,
+                        overview: movieData.overview,
+                        releaseDate: movieData.release_date,
+                        voteAverage: movieData.vote_average,
+                        voteCount: movieData.vote_count,
+                        director: director,
+                        cast: processedCast,
+                        posterImageUrl: posterData.url,
+                        posterDataUrl: posterData.dataUrl,
+                        backdropImageUrl: backdropData.url,
+                        backdropDataUrl: backdropData.dataUrl
+                    });
 
                     console.log(`✅`);
                     totalMoviesSeeded++;
                     
-                    await sleep(1000);
+                    // Thoda rest taaki rate limit na ho
+                    await sleep(2000);
 
                 } catch (movieError) {
                     console.log(`❌ Failed!`);
