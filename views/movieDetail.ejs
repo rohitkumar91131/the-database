@@ -1,0 +1,232 @@
+<%- include('partials/header') %>
+
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+
+<div class="relative w-full h-[55vh] md:h-[75vh] lg:h-[85vh] bg-gray-900">
+    
+    <div class="absolute inset-0 w-full h-full">
+        <img 
+            src="<%= movie.backdropImageUrl %>" 
+            class="w-full h-full object-cover opacity-60"
+            alt="Backdrop"
+        >
+        <div class="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/60 to-transparent"></div>
+    </div>
+
+    <div class="absolute bottom-0 left-0 w-full p-6 md:p-12 flex flex-col md:flex-row items-end gap-8 max-w-7xl mx-auto z-10">
+        
+        <div class="hidden md:block w-64 flex-shrink-0 rounded-xl shadow-2xl shadow-black/80 overflow-hidden border border-gray-700/50 transform hover:scale-105 transition duration-500">
+            <img src="<%= movie.posterImageUrl %>" alt="<%= movie.title %>" class="w-full h-auto">
+        </div>
+
+        <div class="text-white flex-1 space-y-5 mb-4 md:mb-0">
+            <h1 class="text-4xl md:text-6xl font-extrabold tracking-tight drop-shadow-lg leading-tight">
+                <%= movie.title %>
+            </h1>
+
+            <div class="flex flex-wrap items-center gap-3 text-sm md:text-base text-gray-200 font-medium">
+                <span class="bg-yellow-500 text-black px-2 py-0.5 rounded font-bold">IMDb <%= movie.voteAverage.toFixed(1) %></span>
+                <span>•</span>
+                <span><%= new Date(movie.releaseDate).getFullYear() %></span>
+                <span>•</span>
+                <span><%= movie.voteCount.toLocaleString() %> Votes</span>
+                <span>•</span>
+                <span class="border border-gray-500 px-2 rounded text-xs uppercase tracking-wide">HD</span>
+            </div>
+
+            <p class="text-gray-300 text-lg leading-relaxed max-w-3xl drop-shadow-md line-clamp-3 md:line-clamp-none">
+                <%= movie.overview %>
+            </p>
+
+            <div class="pt-2 flex flex-wrap gap-4">
+                <button onclick="openTrailer('<%= movie._id %>')" id="trailerBtn" class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3.5 rounded-full font-bold transition shadow-lg shadow-blue-900/30 flex items-center group relative overflow-hidden">
+                    
+                    <span class="relative z-10 flex items-center">
+                        <svg class="w-5 h-5 mr-2 group-hover:scale-110 transition" fill="currentColor" viewBox="0 0 20 20"><path d="M2 6a2 2 0 012-2h6a2 2 0 012 2v8a2 2 0 01-2 2H4a2 2 0 01-2-2V6zM14.553 7.106A1 1 0 0014 8v4a1 1 0 00.553.894l2 1A1 1 0 0018 13V7a1 1 0 00-1.447-.894l-2 1z"/></svg>
+                        Watch Trailer
+                    </span>
+
+                    <div id="btnSpinner" class="absolute inset-0 flex items-center justify-center bg-blue-700 hidden z-20">
+                        <svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                    </div>
+                </button>
+
+                <button class="bg-gray-800/60 hover:bg-gray-700 text-white px-8 py-3.5 rounded-full font-bold transition backdrop-blur-md border border-gray-600 flex items-center">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
+                    Add to List
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 bg-gray-900 min-h-screen">
+    
+    <div class="md:hidden flex justify-center -mt-24 mb-10 relative z-20">
+        <img src="<%= movie.posterImageUrl %>" alt="<%= movie.title %>" class="w-48 rounded-xl shadow-2xl border border-gray-700">
+    </div>
+
+    <div class="mb-14">
+        <h2 class="text-2xl font-bold text-white mb-6 border-l-4 border-blue-500 pl-4">Top Cast</h2>
+        
+        <div class="flex overflow-x-auto pb-6 space-x-4 scrollbar-hide">
+            <% if (movie.cast && movie.cast.length > 0) { %>
+                <% movie.cast.forEach(actor => { %>
+                    <div class="flex-none w-36 md:w-44 group cursor-pointer">
+                        <div class="w-full h-44 md:h-56 rounded-lg overflow-hidden bg-gray-800 mb-3 relative shadow-lg">
+                            <% if (actor.profileImageUrl) { %>
+                                <img src="<%= actor.profileImageUrl %>" loading="lazy" class="w-full h-full object-cover group-hover:scale-110 transition duration-500" alt="<%= actor.name %>">
+                            <% } else { %>
+                                <div class="w-full h-full flex items-center justify-center bg-gray-700 text-gray-500">
+                                    <svg class="w-12 h-12" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"/></svg>
+                                </div>
+                            <% } %>
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                        </div>
+                        <h3 class="text-white font-medium text-sm truncate group-hover:text-blue-400 transition"><%= actor.name %></h3>
+                        <p class="text-gray-400 text-xs truncate"><%= actor.character %></p>
+                    </div>
+                <% }) %>
+            <% } else { %>
+                <p class="text-gray-500">No cast information available.</p>
+            <% } %>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 border-t border-gray-800 pt-8">
+        <div>
+            <h3 class="text-lg font-semibold text-white mb-2">Director</h3>
+            <p class="text-blue-400 hover:text-blue-300 cursor-pointer"><%= movie.director || 'Unknown' %></p>
+        </div>
+        <div>
+            <h3 class="text-lg font-semibold text-white mb-2">Details</h3>
+            <p class="text-gray-400">Language: <span class="text-white">English</span></p>
+            <p class="text-gray-400">Status: <span class="text-white">Released</span></p>
+        </div>
+    </div>
+</div>
+
+<div id="trailerModal" class="fixed inset-0 z-50 hidden" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+    <div class="absolute inset-0 bg-black/95 transition-opacity backdrop-blur-sm" onclick="closeTrailer()"></div>
+    
+    <div class="flex items-center justify-center min-h-screen px-4">
+        <div class="relative w-full max-w-5xl bg-black rounded-2xl overflow-hidden shadow-2xl border border-gray-800">
+            
+            <button onclick="closeTrailer()" class="absolute top-4 right-4 text-gray-400 hover:text-white bg-black/50 hover:bg-gray-800 rounded-full p-2 z-10 transition">
+                <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+
+            <div class="relative pt-[56.25%] bg-black">
+                <iframe 
+                    id="youtubePlayer"
+                    class="absolute inset-0 w-full h-full"
+                    src="" 
+                    frameborder="0" 
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                    allowfullscreen>
+                </iframe>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+
+<script>
+    const modal = document.getElementById('trailerModal');
+    const player = document.getElementById('youtubePlayer');
+    const btnSpinner = document.getElementById('btnSpinner');
+
+    // Toast Configuration
+    const toastConfig = {
+        gravity: "bottom", // ✅ Bottom
+        position: "right", // ✅ Right
+        stopOnFocus: true, 
+        className: "font-sans font-semibold rounded-lg shadow-2xl flex items-center gap-3 py-3 px-4",
+        offset: { x: 20, y: 20 }
+    };
+
+    let loadingToast = null;
+
+    async function openTrailer(movieId) {
+        // 1. UI Feedback: Show Spinner & Loading Toast
+        btnSpinner.classList.remove('hidden');
+        
+        loadingToast = Toastify({
+            text: "🔍 Searching for trailer...",
+            duration: -1, // Keep open until we close it
+            backgroundColor: "#2563eb", // Blue
+            ...toastConfig
+        }).showToast();
+
+        try {
+            // 2. Await API Response
+            const res = await fetch(`/api/movies/${movieId}/trailer`);
+            const data = await res.json();
+
+            // 3. Remove Loading Toast
+            if(loadingToast) loadingToast.hideToast();
+
+            if (data.success && data.key) {
+                // SUCCESS: Green Toast
+                Toastify({
+                    text: "🎬 Trailer Found! Playing now...",
+                    duration: 3000,
+                    backgroundColor: "#10b981", // Emerald Green
+                    ...toastConfig
+                }).showToast();
+
+                // Play Video
+                player.src = `https://www.youtube.com/embed/${data.key}?autoplay=1&rel=0`;
+                modal.classList.remove('hidden');
+                document.body.style.overflow = 'hidden'; // Stop background scrolling
+
+            } else {
+                // FAILURE: Red Toast
+                Toastify({
+                    text: "❌ Trailer not available on TMDB.",
+                    duration: 4000,
+                    backgroundColor: "#ef4444", // Red
+                    ...toastConfig
+                }).showToast();
+            }
+
+        } catch (err) {
+            // ERROR: Red Toast
+            if(loadingToast) loadingToast.hideToast();
+            console.error(err);
+            
+            Toastify({
+                text: "⚠️ Connection Failed. Try again.",
+                duration: 4000,
+                backgroundColor: "#ef4444",
+                ...toastConfig
+            }).showToast();
+
+        } finally {
+            // Hide Spinner
+            btnSpinner.classList.add('hidden');
+        }
+    }
+
+    function closeTrailer() {
+        modal.classList.add('hidden');
+        player.src = ''; // Stop Audio
+        document.body.style.overflow = 'auto'; // Restore scrolling
+    }
+
+    // Keyboard Shortcuts
+    document.addEventListener('keydown', function(event) {
+        if (event.key === "Escape") closeTrailer();
+    });
+</script>
+
+<style>
+    /* Utility to hide scrollbar */
+    .scrollbar-hide::-webkit-scrollbar { display: none; }
+    .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+</style>
+
+<%- include('partials/footer') %>

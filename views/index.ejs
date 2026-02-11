@@ -1,0 +1,91 @@
+<%- include('partials/header') %>
+
+<div class="relative overflow-hidden pt-24 pb-32 lg:pt-36 lg:pb-48">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10 animate-fade-in-up">
+        
+        <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-gray-900/80 border border-gray-700 backdrop-blur-sm mb-8 shadow-lg">
+            <span class="relative flex h-2 w-2">
+              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+              <span class="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+            </span>
+            <span class="text-xs font-bold text-gray-300 tracking-widest uppercase">System Online v2.4</span>
+        </div>
+
+        <h1 class="text-6xl md:text-8xl font-bold tracking-tighter text-white mb-6">
+            <span class="bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 neon-text">
+                NEXUS
+            </span>
+        </h1>
+        
+        <p class="mt-4 max-w-2xl mx-auto text-xl text-gray-400 font-light leading-relaxed">
+            The Universal Catalog for Everything. 
+            <span class="text-cyan-400 font-medium">Movies</span>, <span class="text-purple-400 font-medium">Actors</span>, and <span class="text-pink-400 font-medium">Products</span> indexed in one core.
+        </p>
+
+        <div class="mt-12 max-w-xl mx-auto">
+            <form action="/movies" method="GET" class="relative group">
+                <div class="absolute -inset-0.5 bg-gradient-to-r from-cyan-500 to-purple-600 rounded-lg blur opacity-30 group-hover:opacity-75 transition duration-1000 group-hover:duration-200 animate-pulse"></div>
+                
+                <div class="relative flex bg-[#0f172a] rounded-lg p-1.5 border border-gray-700 shadow-2xl">
+                    <div class="flex-1 flex items-center pl-4">
+                        <svg class="w-5 h-5 text-gray-500 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                        <input 
+                            type="text" 
+                            name="search"
+                            class="w-full bg-transparent text-white focus:outline-none placeholder-gray-500 font-medium" 
+                            placeholder="Search the Nexus..."
+                            autocomplete="off"
+                        >
+                    </div>
+                    <button class="bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500 text-white px-6 py-2.5 rounded-md font-bold tracking-wide transition shadow-lg">
+                        INITIALIZE
+                    </button>
+                </div>
+            </form>
+        </div>
+
+    </div>
+
+    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-blue-600/10 rounded-full blur-[120px] pointer-events-none"></div>
+</div>
+
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-24 relative z-20 pb-20">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        
+        <a href="/movies" class="group relative bg-[#0f172a]/80 backdrop-blur-md rounded-2xl p-8 border border-gray-800 hover:border-cyan-500/50 transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_0_30px_rgba(6,182,212,0.15)] overflow-hidden">
+            <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition duration-500 transform group-hover:scale-110">
+                <svg class="w-32 h-32 text-cyan-500" fill="currentColor" viewBox="0 0 20 20"><path d="M2 6a2 2 0 012-2h6a2 2 0 012 2v8a2 2 0 01-2 2H4a2 2 0 01-2-2V6zM14.553 7.106A1 1 0 0014 8v4a1 1 0 00.553.894l2 1A1 1 0 0018 13V7a1 1 0 00-1.447-.894l-2 1z"/></svg>
+            </div>
+            <h2 class="text-2xl font-bold text-white mb-2 group-hover:text-cyan-400 transition">Movies & Shows</h2>
+            <p class="text-gray-400 text-sm mb-8 leading-relaxed">Access thousands of titles, trailers, and metadata powered by TMDB.</p>
+            <span class="inline-flex items-center text-cyan-500 font-bold text-xs tracking-widest uppercase border border-cyan-900/50 bg-cyan-900/20 px-3 py-1.5 rounded group-hover:bg-cyan-500 group-hover:text-black transition-colors">
+                Browse Sector <span class="ml-2 group-hover:translate-x-1 transition-transform">&rarr;</span>
+            </span>
+        </a>
+
+        <a href="/actors" class="group relative bg-[#0f172a]/80 backdrop-blur-md rounded-2xl p-8 border border-gray-800 hover:border-purple-500/50 transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_0_30px_rgba(168,85,247,0.15)] overflow-hidden">
+            <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition duration-500 transform group-hover:scale-110">
+                <svg class="w-32 h-32 text-purple-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"/></svg>
+            </div>
+            <h2 class="text-2xl font-bold text-white mb-2 group-hover:text-purple-400 transition">Talent Database</h2>
+            <p class="text-gray-400 text-sm mb-8 leading-relaxed">Profiles, filmography, and social data for global actors and crew.</p>
+            <span class="inline-flex items-center text-purple-500 font-bold text-xs tracking-widest uppercase border border-purple-900/50 bg-purple-900/20 px-3 py-1.5 rounded group-hover:bg-purple-500 group-hover:text-black transition-colors">
+                Identify Talent <span class="ml-2 group-hover:translate-x-1 transition-transform">&rarr;</span>
+            </span>
+        </a>
+
+        <a href="/products" class="group relative bg-[#0f172a]/80 backdrop-blur-md rounded-2xl p-8 border border-gray-800 hover:border-pink-500/50 transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_0_30px_rgba(236,72,153,0.15)] overflow-hidden">
+            <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition duration-500 transform group-hover:scale-110">
+                <svg class="w-32 h-32 text-pink-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5 3a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2V5a2 2 0 00-2-2H5zm0 2h10v7h-2l-1 2H8l-1-2H5V5z" clip-rule="evenodd"/></svg>
+            </div>
+            <h2 class="text-2xl font-bold text-white mb-2 group-hover:text-pink-400 transition">Global Gear</h2>
+            <p class="text-gray-400 text-sm mb-8 leading-relaxed">Merchandise, tech equipment, and physical assets indexed in the Nexus.</p>
+            <span class="inline-flex items-center text-pink-500 font-bold text-xs tracking-widest uppercase border border-pink-900/50 bg-pink-900/20 px-3 py-1.5 rounded group-hover:bg-pink-500 group-hover:text-black transition-colors">
+                Inspect Assets <span class="ml-2 group-hover:translate-x-1 transition-transform">&rarr;</span>
+            </span>
+        </a>
+
+    </div>
+</div>
+
+<%- include('partials/footer') %>

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+
+    <link rel="icon" type="image/png" href="/images/logo.png">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        body { font-family: 'Space Grotesk', sans-serif; }
+        .neon-text { text-shadow: 0 0 10px rgba(59,130,246,.5); }
+        .neon-text-purple { text-shadow: 0 0 10px rgba(168,85,247,.5); }
+        .neon-text-pink { text-shadow: 0 0 10px rgba(236,72,153,.5); }
+        .neon-text-yellow { text-shadow: 0 0 10px rgba(250,204,21,.5); }
+        ::-webkit-scrollbar { width:8px }
+        ::-webkit-scrollbar-track { background:#0f172a }
+        ::-webkit-scrollbar-thumb { background:#334155;border-radius:4px }
+        ::-webkit-scrollbar-thumb:hover { background:#475569 }
+        @keyframes fade-in-up {
+            from { opacity:0; transform:translateY(20px) }
+            to { opacity:1; transform:translateY(0) }
+        }
+        .animate-fade-in-up { animation:fade-in-up .8s ease-out forwards }
+    </style>
+</head>
+
+<body class="bg-[#0B0C10] text-slate-200 flex flex-col min-h-screen selection:bg-cyan-500 selection:text-black">
+
+<nav class="sticky top-0 z-50 bg-[#0B0C10]/80 backdrop-blur-md border-b border-gray-800">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between h-20">
+
+            <a href="/" class="flex items-center gap-3 group">
+                <div class="relative">
+                    <div class="absolute -inset-1 bg-gradient-to-r from-cyan-500 to-blue-600 rounded-xl blur opacity-25 group-hover:opacity-50 transition duration-300"></div>
+                    <img src="/images/logo.png" class="relative w-10 h-10 rounded-xl border border-gray-700/50 bg-black object-contain">
+                </div>
+                <span class="text-2xl font-black tracking-tighter text-white group-hover:text-cyan-400 transition">NEXUS</span>
+            </a>
+
+            <div class="hidden md:flex items-center space-x-1 text-xs font-bold uppercase tracking-widest">
+                <a href="/" class="px-4 py-2 rounded-lg <%= path === '/' ? 'text-cyan-400 neon-text bg-cyan-400/5' : 'text-gray-400 hover:text-white hover:bg-white/5' %>">Home</a>
+                <a href="/movies" class="px-4 py-2 rounded-lg <%= path === '/movies' ? 'text-cyan-400 neon-text bg-cyan-400/5' : 'text-gray-400 hover:text-white hover:bg-white/5' %>">Movies</a>
+                <a href="/actors" class="px-4 py-2 rounded-lg <%= path === '/actors' ? 'text-purple-400 neon-text-purple bg-purple-400/5' : 'text-gray-400 hover:text-white hover:bg-white/5' %>">Actors</a>
+                <a href="/products" class="px-4 py-2 rounded-lg <%= path === '/products' ? 'text-pink-500 neon-text-pink bg-pink-500/5' : 'text-gray-400 hover:text-white hover:bg-white/5' %>">Products</a>
+                <a href="/docs" class="px-4 py-2 rounded-lg <%= path === '/docs' ? 'text-yellow-400 neon-text-yellow bg-yellow-400/5' : 'text-gray-400 hover:text-yellow-400 hover:bg-yellow-400/5' %>">Try API</a>
+            </div>
+
+            <button id="menuBtn" class="md:hidden text-gray-400 hover:text-white text-xl">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+        </div>
+    </div>
+
+    <div id="mobileMenu" class="hidden md:hidden bg-[#0B0C10] border-t border-gray-800 px-6 py-6 space-y-4 text-sm font-bold uppercase tracking-widest">
+        <a href="/" class="block">Home</a>
+        <a href="/movies" class="block">Movies</a>
+        <a href="/actors" class="block">Actors</a>
+        <a href="/products" class="block">Products</a>
+        <a href="/docs" class="block text-yellow-400">Try API</a>
+    </div>
+</nav>
+
+<main class="flex-grow relative">
+    <div class="absolute inset-0 z-0 opacity-20 pointer-events-none"
+         style="background-image: radial-gradient(#334155 1px, transparent 1px); background-size: 40px 40px;">
+    </div>
+    <div class="relative z-10">
+
+<script>
+const btn = document.getElementById("menuBtn")
+const menu = document.getElementById("mobileMenu")
+btn.addEventListener("click",()=>menu.classList.toggle("hidden"))
+</script>
+
+</body>
+</html>

@@ -222,3 +222,25 @@ exports.seedDatabase = async () => {
 
     return totalMoviesSeeded;
 };
+
+
+exports.getTrailerKey = async (movieId) => {
+    try {
+        const movie = await Movie.findById(movieId);
+        if (!movie) throw new Error("Movie not found");
+
+        const response = await axios.get(
+            `https://api.themoviedb.org/3/movie/${movie.tmdbId}/videos`, 
+            { params: { api_key: process.env.TMDB_API_KEY } }
+        );
+
+        const trailer = response.data.results.find(
+            vid => vid.site === 'YouTube' && vid.type === 'Trailer'
+        );
+
+        return trailer ? trailer.key : null;
+    } catch (error) {
+        console.error("Trailer Fetch Error:", error.message);
+        return null;
+    }
+};
