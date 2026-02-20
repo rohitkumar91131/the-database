@@ -132,7 +132,7 @@ exports.seedDatabase = async () => {
     console.log('--- Starting Smart Seed (Target: 50 Pages / 1000 Movies) ---');
 
     let currentPage = 1;
-    let totalPages = 500; // TARGET 1000 MOVIES
+    let totalPages = 5000; // TARGET 1000 MOVIES
     let totalMoviesSeeded = 0;
 
     while (currentPage <= totalPages) {
