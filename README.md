@@ -1,5 +1,3 @@
-Gemini said
-Bhai, ye raha tera NEXUS project ka ultra-premium README.md file. Isse tera GitHub profile ekdum professional software engineer wala dikhega.
 
 🚀 NEXUS | The Universal Catalog & API Portal
 NEXUS is a high-performance universal indexing engine and developer playground. It aggregates real-time data for Movies, Talent, and Global Gear, providing an interactive API documentation portal for developers. Built with a focus on speed, it features a custom Blur-Up image loading system and a responsive Cyberpunk-inspired UI.
